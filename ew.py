@@ -28,18 +28,19 @@ def get_rect_various(matrix, x, y) -> set:
     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
     number = matrix[y][x]
     rect_various = set()
-    razmerSnizuVverh = len(matrix)
-    razmerSlevaNapravo = len(matrix[0])
+    razmerSlevaNapravo, razmerSnizuVverh = calculate_lenwidth(matrix)
     for num in range(1, number + 1):
         if number % num == 0:
             height = num
             width = number // num
-            for i in range(max(0, x - width + 1), min(x + 1, razmerSlevaNapravo - width + 1)):  # !!!!!!!!!!!!!!!
+            # работало верно, надо было переставить размеры с квадратного на прямоугольники
+            for i in range(max(0, x - width + 1), min(x + 1, razmerSlevaNapravo - width + 1)):
                 for j in range(max(0, y - height + 1), min(y + 1, razmerSnizuVverh - height + 1)):
-                    # if is_q(matrix, i, j, height, width):
-                    #     #print(is_q(matrix, i, j, height, width))
+                    # if is_bound(matrix, i, j, height, width):
                     #     continue
-                    print("x", i, "y", j, "I", height, "--", width)
+                    rect_various.add((i, j, height, width))
+    return rect_various
+                    # print("x", i, "y", j, "I", height, "--", width) - работает верно
                 # if not self.__is_reserved_points_in_rect(Rect(i, j, height, width), point):
                 # if matrix[j][i] == -1 or matrix[j][i + width - 1] == -1:
                 # continue
@@ -47,15 +48,35 @@ def get_rect_various(matrix, x, y) -> set:
                 # rect_various.add(i, j, height, width)
 
 
-def is_q(matrix, i, j, height, width):
-    x, y = calculate_lenwidth(matrix)
-    for l in range(height):
-        if i+width <= x:
-            for k in range(i, i+width):
-            # for l in range(j, height):
-                #print(k, l, matrix[l][k])
-                if matrix[l][k] == -1:
-                    return True
+def get_rect_various1(matrix, x, y) -> set:
+    """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
+    number = matrix[y][x]
+    rect_various = set()
+    razmerSlevaNapravo, razmerSnizuVverh = calculate_lenwidth(matrix)
+    for num in range(1, number + 1):
+        if number % num == 0:
+            height = num
+            width = number // num
+            # работало верно, надо было переставить размеры с квадратного на прямоугольники
+            for i in range(max(0, x - width + 1), min(x + 1, razmerSlevaNapravo - width + 1)):
+                for j in range(max(0, y - height + 1), min(y + 1, razmerSnizuVverh - height + 1)):
+                    if is_bound(matrix, i, j, height, width):
+                        continue
+                    rect_various.add((i, j, height, width))
+    return rect_various
+
+
+def is_bound(matrix, i, j, height, width):
+    # Проверяем, что координаты и размеры прямоугольника валидны
+    if i < 0 or j < 0 or i + width > len(matrix[0]) or j + height > len(matrix):
+        return False, "yadurak, чето выходит"
+
+    # Проходим по каждому символу в прямоугольнике
+    for row in range(j, j + height):
+        for col in range(i, i + width):
+            if matrix[row][col] == -1:
+                return True  # Найден символ "q", возвращаем True
+
     return False
 
 
@@ -75,9 +96,12 @@ if __name__ == "__main__":
     matrix_str = "test1.txt"
     matrix_int = get_grid(matrix_str)
     x, y = calculate_lenwidth(matrix_int)
-    print(matrix_int)
-    #print(x,"*", y)
-    get_rect_various(matrix_int, 1,2)
-    all_the_points_on_grid = get_start_points(matrix_int)
-    #print(all_the_points_on_grid)
-    print(is_q(matrix_int, 3,0, 1, 4))
+    print("Парсинг матрицы:", matrix_int)
+    print("Размеры матрицы:", x, "*", y)
+    print("Возможные прямоугольники без учета границ:")
+    print(get_rect_various(matrix_int, 6,3))
+    print("Возможные прямоугольники с учетом границ:")
+    print(get_rect_various1(matrix_int, 6,3))
+    # all_the_points_on_grid = get_start_points(matrix_int)
+    # print("Список всех координат чисел на поле в хэше:", all_the_points_on_grid)
+    # print("Есть ли границы в прямоугольниках:", is_bound(matrix_int, 4,2, 4, 1))
