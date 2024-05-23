@@ -17,14 +17,17 @@ def get_grid(file_name):
         print("An error occurred:", e)
         return None
 
+# cols_count = None
+# rows_count = None
 
 def calculate_lenwidth(matrix):
+    #global cols_count, rows_count
+    cols_count= len(matrix[0])
     rows_count = len(matrix)
-    cols_count = len(matrix[0])
     return (cols_count, rows_count)
 
 
-def get_rect_various(matrix, x, y) -> set:
+def get_rect_various_all(matrix, x, y) -> set:
     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
     number = matrix[y][x]
     rect_various = set()
@@ -48,7 +51,7 @@ def get_rect_various(matrix, x, y) -> set:
                 # rect_various.add(i, j, height, width)
 
 
-def get_rect_various1(matrix, x, y) -> set:
+def get_rect_various_bounds(matrix, x, y) -> set:
     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
     number = matrix[y][x]
     rect_various = set()
@@ -96,12 +99,13 @@ if __name__ == "__main__":
     matrix_str = "test1.txt"
     matrix_int = get_grid(matrix_str)
     x, y = calculate_lenwidth(matrix_int)
+    #calculate_lenwidth(matrix_int)
     print("Парсинг матрицы:", matrix_int)
-    print("Размеры матрицы:", x, "*", y)
+    print("Размеры матрицы:", x, "*",y)
     print("Возможные прямоугольники без учета границ:")
-    print(get_rect_various(matrix_int, 6,3))
+    print(get_rect_various_all(matrix_int, 6,3))
     print("Возможные прямоугольники с учетом границ:")
-    print(get_rect_various1(matrix_int, 6,3))
+    print(get_rect_various_bounds(matrix_int, 6,3))
     # all_the_points_on_grid = get_start_points(matrix_int)
     # print("Список всех координат чисел на поле в хэше:", all_the_points_on_grid)
     # print("Есть ли границы в прямоугольниках:", is_bound(matrix_int, 4,2, 4, 1))
