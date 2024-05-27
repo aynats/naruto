@@ -10,7 +10,7 @@ class Rect:
         self.Width = width
 
     def __str__(self):
-        return f'(X: {self.X} → {self.Height}, Y: {self.Y} ↓ {self.Width})'
+        return f'(X: {self.X}, Y: {self.Y}, Width: {self.Width}, Height: {self.Height})'
 
     def __hash__(self):
         return (self.X, self.Y, self.Height, self.Width).__hash__()
