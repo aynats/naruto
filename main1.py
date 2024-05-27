@@ -1,6 +1,7 @@
 from solver import Solver as s
 from reader import shikaku_reader as r
 from pppoint import Point
+from rrrrectangle import Rect
 
 if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
@@ -9,8 +10,24 @@ if __name__ == "__main__":
     print(matrix_int)
 
     solver = s(matrix_int)
-    print(solver.calculate_lenwidth())
+
     solutions = solver.main_solve()     # сейчас там возвращается словарь прямоугольников
+    for key, val in solutions.items():
+        print(f"Point ({key.X}, {key.Y}):")
+        for rectangle in val:
+            print(rectangle)
+
+
+
+    # # Проверка метода reserve_rectangle
+    # print()
+    # first_key = next(iter(solutions))
+    #
+    # # Теперь мы можем получить доступ к первому кортежу первого ключа
+    # desired_tuple = list(solutions[first_key])[0]
+    #
+    # # print("reserve", desired_tuple)
+    # print("reserve", solver.reserve_rectangle(desired_tuple, list(solutions.keys())[2]))
 
     # for key, val in dict.items():
     #     print(f"Point ({key.X}, {key.Y}):")
