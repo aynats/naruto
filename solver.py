@@ -1,6 +1,7 @@
 from copy import deepcopy
 from pppoint import Point
 
+
 class Solver:
     def __init__(self, matrix):
         self.matrix = matrix
@@ -9,10 +10,10 @@ class Solver:
         self.cols_count = len(matrix[0])
         self.points_on_grid = self.get_start_points()
 
-        #self.__unresolved_points = self.__get_start_points()
-        #self.__reserved_points = deepcopy(self.__unresolved_points)
-        self.__ans_matrix = [['0' for j in range(len(matrix))] for i in range(len(matrix))]
-        self.__curr_num = 1
+        self.unresolved_points = self.get_start_points()
+        self.reserved_points = deepcopy(self.unresolved_points)
+        self.answer_matrix = [['0' for j in range(len(matrix))] for i in range(len(matrix))]
+        self.counter_reserved_rect = 1
         #self.__determine_part_solve()
 
     # cols_count = None
@@ -78,6 +79,32 @@ class Solver:
                     points.add(Point(x, y))
 
         return points
+
+    def reserve_rectangle(self, rect, point: Point):
+        if point in self.points_on_grid:
+            self.points_on_grid.remove(point)
+        all_reserved_point_in_rect = set()
+        for i in range(rect.X, rect.X + rect.Height):
+            for j in range(rect.Y, rect.Y + rect.Width):
+                self.answer_matrix[j][i] = chr(97 + self.counter_reserved_rect)
+                all_reserved_point_in_rect.add(Point(i, j))
+        self.reserved_points = self.reserved_points | all_reserved_point_in_rect
+        self.counter_reserved_rect += 1
+
+        for conflict_point in self.dictionary_of_points.keys():
+            is_conflict = False
+            for rect in self.dictionary_of_points[conflict_point]:
+                for result_point in all_reserved_point_in_rect:
+                    if rect.contain(result_point):
+                        self.dictionary_of_points[conflict_point].remove(rect)
+                        is_conflict = True
+                        break
+                if is_conflict:
+                    break
+
+        if point in self.dictionary_of_points:
+            self.dictionary_of_points.pop(point)
+
 
     def main_solve(self):
         """Основная функция, вызывающая все остальные"""
