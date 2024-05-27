@@ -15,14 +15,14 @@ class Solver:
         self.__curr_num = 1
         #self.__determine_part_solve()
 
-# cols_count = None
-# rows_count = None
+    # cols_count = None
+    # rows_count = None
 
-    def calculate_lenwidth(self) -> (int, int):
-        #global cols_count, rows_count
-        cols_count= len(self.matrix[0])
-        rows_count = len(self.matrix)
-        return cols_count, rows_count
+    # def calculate_dimensions(self) -> (int, int):
+    #     #global cols_count, rows_count
+    #     cols_count= len(self.matrix[0])
+    #     rows_count = len(self.matrix)
+    #     return cols_count, rows_count
 
     def get_rect_various_all(self, x, y) -> set:
         """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
@@ -41,7 +41,7 @@ class Solver:
         return rect_various
 
     def get_rect_various_bounds(self, x, y) -> set:
-        """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
+        """Возвращает все возможные расположения прямоугольников для каждой ячейки"""
         number = self.matrix[y][x]
         rect_various = set()
         for num in range(1, number + 1):
@@ -57,6 +57,7 @@ class Solver:
         return rect_various
 
     def is_bound(self, i, j, height, width) -> bool:
+        """Проверяет наличие границы"""
         # Проверяем, что координаты и размеры прямоугольника валидны
         if i < 0 or j < 0 or i + width > len(self.matrix[0]) or j + height > len(self.matrix):
             return False
@@ -68,20 +69,18 @@ class Solver:
 
         return False
 
-
     def get_start_points(self):
-        """Ищет и возвращает множество изначальных точек из Shikaku"""
+        """Ищет на поле числа, задающие прямоугольники, и возвращает их в виде множества"""
         points = set()
         for x in range(self.cols_count):
             for y in range(self.rows_count):
                 if self.matrix[y][x] > 0:
                     points.add(Point(x, y))
 
-
-
         return points
 
     def main_solve(self):
+        """Основная функция, вызывающая все остальные"""
         for point in self.points_on_grid:
             # global dictionary_of_points
             self.dictionary_of_points[point] = None
@@ -90,6 +89,7 @@ class Solver:
             self.dictionary_of_points[key] = self.get_rect_various_bounds(key.X, key.Y)
 
         return self.dictionary_of_points
+
         # print("Возможные прямоугольники у точки с учетом границ:")
         # print(self.get_rect_various_bounds(6, 3))
         # Вывод всех ректанглов для каждой точки в словаре
