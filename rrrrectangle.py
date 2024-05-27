@@ -28,5 +28,4 @@ class Rect:
         return Rect(self.X, self.Y, self.Height, self.Width)
 
     def contain(self, point: Point):
-        return self.X <= point.X <= self.X + self.Height - 1\
-               and self.Y <= point.Y <= self.Y + self.Width - 1
+        return self.X <= point.X <= self.X + self.Width - 1 and self.Y <= point.Y <= self.Y + self.Height - 1

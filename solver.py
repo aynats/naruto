@@ -105,14 +105,15 @@ class Solver:
         hi = rect.Y + rect.Height
         rectX = rect.X
         rectY = rect.Y
-        flag = not(rect.X < 0 or rect.Y < 0 or wi >= self.cols_count or hi >= self.rows_count)
+        flag = rect.X >= 0 or rect.Y >= 0 or rect.X + rect.Width <= self.cols_count or rect.Y + rect.Height <= self.rows_count
         if flag:
             for i in range(rect.X, rect.X + rect.Width):    # нужна ли проверка на границы?
                 for j in range(rect.Y, rect.Y + rect.Height):
                     #if not(self.is_bound(i, j, rect.Height, rect.Width)):
-                    self.answer_matrix[j][i] = chr(97 + self.counter_reserved_rect)
+                    # if Point(i, j) not in self.reserved_points:
+                    self.answer_matrix[j][i] = chr(96 + self.counter_reserved_rect)
                     all_reserved_point_in_rect.add(Point(i, j))
-                        #print(self.answer_matrix[j])
+                    # print(self.answer_matrix[j])
 
         self.reserved_points = self.reserved_points | all_reserved_point_in_rect
         self.counter_reserved_rect += 1

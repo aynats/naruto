@@ -5,7 +5,7 @@ from rrrrectangle import Rect
 
 if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
-    matrix_str = "test2.txt"
+    matrix_str = "test1.txt"
     matrix_int = r.get_grid(matrix_str)
     rows_count = len(matrix_int)
     cols_count = len(matrix_int[0])
