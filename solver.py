@@ -88,16 +88,18 @@ class Solver:
         return points
 
     def reserve_rectangle(self, rect: Rect, point: Point):
+        """Резервирует один прямоугольник на поле"""
         if point in self.points_on_grid:
             self.points_on_grid.remove(point)
         all_reserved_point_in_rect = set()
-        for i in range(rect.X, rect.X + rect.Height):
-            for j in range(rect.Y, rect.Y + rect.Width):
-                self.answer_matrix[j][i] = chr(97 + self.counter_reserved_rect)
-                all_reserved_point_in_rect.add(Point(i, j))
+        if rect.X + rect.Height < self.cols_count and rect.Y + rect.Width < self.rows_count:
+            for i in range(rect.X, rect.X + rect.Height):    # Не нужна ли проверка на границы?
+                for j in range(rect.Y, rect.Y + rect.Width):
+                    self.answer_matrix[j][i] = chr(97 + self.counter_reserved_rect)
+                    all_reserved_point_in_rect.add(Point(i, j))
         self.reserved_points = self.reserved_points | all_reserved_point_in_rect
         self.counter_reserved_rect += 1
-
+        # if i < 0 or j < 0 or i + width > len(self.matrix[0]) or j + height > len(self.matrix):
         for conflict_point in self.dictionary_of_points.keys():          # Не должны ли мы ничего копировать?
             is_conflict = False
             for rect in self.dictionary_of_points[conflict_point]:
@@ -118,6 +120,7 @@ class Solver:
         #         print(rectangle)
 
     def determine_part_solve(self):
+        """Заполняет словарь точка-прямоугольник либо резервирует прямоугольники на поле"""
         count_only_possible_point_solutions = 1
         while count_only_possible_point_solutions != 0:
             # Для каждой точки с поля != 0, -1 пересмотрим решения с помощью этого цикла:
@@ -134,11 +137,42 @@ class Solver:
                     count_only_possible_point_solutions += 1
 
     def is_solution_impossible(self):
+        """Проверяет, есть ли решение у какой-то точки из словаря"""
         for point in self.points_on_grid:
             if len(self.dictionary_of_points[point]) == 0:
                 return True
 
         return False
+
+    def get_solve_with_reversed_rect(self, rect: Rect, point: Point):
+        self.reserve_rectangle(rect, point)
+        self.determine_part_solve()
+        return self.main_solve()
+
+    def get_all_solves(self):
+        answers = []
+        if len(self.points_on_grid) == 0:
+            answers.append(self.answer_matrix)
+
+        if self.is_solution_impossible():
+            return False
+
+        if len(self.points_on_grid) != 0:
+            unresolved_point = list(self.points_on_grid)[0]
+            for poss_rect in self.dictionary_of_points[unresolved_point]:
+                solver_copy = deepcopy(self)
+                #solver_copy.reserve_rect(poss_rect, unresolved_point)
+                #solver_copy.determine_part_solve()
+                ans = solver_copy.get_all_solves_with_reversed_rect(poss_rect, unresolved_point)
+                if ans:
+                    answers.extend(ans)
+
+        return answers
+
+    def get_all_solves_with_reversed_rect(self, rect: Rect, point: Point):
+        self.reserve_rectangle(rect, point)
+        self.determine_part_solve()
+        return self.get_all_solves()
 
     def main_solve(self):
         """Основная функция, вызывающая все остальные"""
@@ -148,7 +182,16 @@ class Solver:
         if self.is_solution_impossible():
             return False
 
-        return 0
+        unresolved_point = list(self.points_on_grid)[0]
+        for poss_rect in self.dictionary_of_points[unresolved_point]:
+            solver_copy = deepcopy(self)
+            # solver_copy.reserve_rect(poss_rect, unresolved_point)
+            # solver_copy.determine_part_solve()
+            ans = solver_copy.get_solve_with_reversed_rect(poss_rect, unresolved_point)
+            if ans:
+                return ans
+
+
         # for point in self.points_on_grid:
         #     # global dictionary_of_points
         #     self.dictionary_of_points[point] = None

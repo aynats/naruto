@@ -5,17 +5,19 @@ from rrrrectangle import Rect
 
 if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
-    matrix_str = "test1.txt"
+    matrix_str = "test2.txt"
     matrix_int = r.get_grid(matrix_str)
+    n = len(matrix_int)
     print(matrix_int)
 
     solver = s(matrix_int)
 
     solutions = solver.main_solve()     # сейчас там возвращается словарь прямоугольников
-    for key, val in solutions.items():
-        print(f"Point ({key.X}, {key.Y}):")
-        for rectangle in val:
-            print(rectangle)
+    for i in range(n):
+        for j in range(n):
+            print(solutions[i][j], end='\t')
+        print()
+    print()
 
 
 
