@@ -1,11 +1,16 @@
 from pppoint import Point
 
+
+points_on_grid = set()
+
+
 def get_grid(file_name):
     matrix = [] #список списков-строк
     try:
         with open(file_name, 'r') as file:
             for line in file:
-                row_str = line[:-1].replace('_', '0').replace('Q', '-1')
+                row_str = line[:-1] if line[:-1] == '\n' else line
+                row_str = row_str.replace('_', '0').replace('Q', '-1')
                 row = [int(x) for x in row_str.split()]
                 matrix.append(row)
         return matrix
@@ -61,6 +66,7 @@ def get_rect_various_bounds(matrix, x, y) -> set:
     number = matrix[y][x]
     rect_various = set()
     razmerSlevaNapravo, razmerSnizuVverh = calculate_lenwidth(matrix)
+    print("!", points_on_grid)
     for num in range(1, number + 1):
         if number % num == 0:
             height = num
@@ -103,8 +109,9 @@ if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
     matrix_str = "test1.txt"
     matrix_int = get_grid(matrix_str)
-
+    #global points_on_grid
     points_on_grid = get_start_points(matrix_int)
+
     for point in points_on_grid:
         #global dictionary_of_points
         dictionary_of_points[point] = None
@@ -117,9 +124,9 @@ if __name__ == "__main__":
     print("Парсинг матрицы:", matrix_int)
     print("Размеры матрицы:", x, "*", y)
     print("Возможные прямоугольники у точки без учета границ:")
-    print(get_rect_various_all(matrix_int, 6,3))
+    print(get_rect_various_all(matrix_int, 4,0))
     print("Возможные прямоугольники у точки с учетом границ:")
-    print(get_rect_various_bounds(matrix_int, 6,3))
+    print(get_rect_various_bounds(matrix_int, 4,0))
 
     # В словаре каждой точке сопоставили кортеж с прямоугольником
     for key in dictionary_of_points:
