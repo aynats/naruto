@@ -5,7 +5,7 @@ from rrrrectangle import Rect
 
 if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
-    matrix_str = "test1.txt"
+    matrix_str = "test9!!!.txt"
     matrix_int = r.get_grid(matrix_str)
     rows_count = len(matrix_int)
     cols_count = len(matrix_int[0])
@@ -13,11 +13,15 @@ if __name__ == "__main__":
 
     solver = s(matrix_int)
 
-    solutions = solver.main_solve()     # сейчас там возвращается словарь прямоугольников
-    for i in range(rows_count):
-        for j in range(cols_count):
-            print(solutions[i][j], end='\t')
-        print()
+    solutions = solver.main_solve()
+    why = solutions is bool
+    if isinstance(solutions, bool) and not solutions:
+        print("There is no solutions for Shikaku task")
+    else:
+        for i in range(rows_count):
+            for j in range(cols_count):
+                print(solutions[i][j], end='\t')
+            print()
     print()
 
 
