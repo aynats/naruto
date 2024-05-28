@@ -14,7 +14,6 @@ if __name__ == "__main__":
     solver = s(matrix_int)
 
     solutions = solver.main_solve()
-    why = solutions is bool
     if isinstance(solutions, bool) and not solutions:
         print("There is no solutions for Shikaku task")
     else:
