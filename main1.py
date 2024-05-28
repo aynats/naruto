@@ -5,6 +5,9 @@ from rrrrectangle import Rect
 
 if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
+    # Проверка с консоли
+    # matrix = r.read_matrix_from_console()
+    # print(matrix)
     matrix_str = "test9!!!.txt"
     matrix_int = r.get_grid(matrix_str)
     rows_count = len(matrix_int)
