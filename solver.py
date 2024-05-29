@@ -16,12 +16,13 @@ class Solver:
         # self.fill_answer_matrix()
         self.counter_reserved_rect = 1
         self.determine_part_solve()
+        self.list_of_solutions = list()
 
-    def fill_answer_matrix(self):
-        for j in range(self.rows_count):
-            for i in range(self.cols_count):
-                if self.matrix[j][i] >= 0:
-                    self.answer_matrix[j][i] = 0
+    # def fill_answer_matrix(self):
+    #     for j in range(self.rows_count):
+    #         for i in range(self.cols_count):
+    #             if self.matrix[j][i] >= 0:
+    #                 self.answer_matrix[j][i] = 0
 
     # cols_count = None
     # rows_count = None
@@ -151,7 +152,7 @@ class Solver:
                     self.dictionary_of_points[point] = rect_various     # self.get_rect_various_bounds(point)
 
             count_only_possible_point_solutions = 0
-            for point in self.points_on_grid:           # Не понимаю
+            for point in self.points_on_grid:
                 if len(self.dictionary_of_points[point]) == 1:
                     count_only_possible_point_solutions += 1
 
@@ -197,7 +198,9 @@ class Solver:
         """Основная функция, вызывающая все остальные"""
         if len(self.points_on_grid) == 0:
             # self.fill_answer_matrix()
-            return self.answer_matrix
+            if [self.answer_matrix] not in self.list_of_solutions:
+                self.list_of_solutions.append(self.answer_matrix)
+                return self.list_of_solutions
 
         if self.is_solution_impossible():
             return False
@@ -209,7 +212,12 @@ class Solver:
             # solver_copy.determine_part_solve()
             ans = solver_copy.get_solve_with_reserved_rect(poss_rect, unresolved_point)
             if ans:
-                return ans
+                self.list_of_solutions.append(ans)
+
+        if len(self.list_of_solutions) != 0:
+            return self.list_of_solutions
+        else:
+            return False
 
 
         # for point in self.points_on_grid:

@@ -107,7 +107,7 @@ def get_start_points(matrix):
 
 if __name__ == "__main__":
     # matrix = input("Enter a filename in your directory:")
-    matrix_str = "test1.txt"
+    matrix_str = "test-.txt"
     matrix_int = get_grid(matrix_str)
     #global points_on_grid
     points_on_grid = get_start_points(matrix_int)
