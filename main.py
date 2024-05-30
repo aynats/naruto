@@ -59,7 +59,7 @@ def handle_list_matrix(matrix_int):
         if len(result) == 0:
             print("There is no solutions for Shikaku")
             sys.exit()
-        print(result)
+        # print(result)
         table_rows = []
         for table in result:
             for row in table:
