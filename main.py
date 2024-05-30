@@ -114,19 +114,23 @@ def get_grid_for_console(inputted_data):
 
 if __name__ == "__main__":
     while True:
-        print("Введите имя файла с неразрешенным Шикаку или количество строк для решения из консоли.")
-        print("Для выхода из программы введите «exit»")
-        print()
-        inputted_data = input()
-        line = re.search(r'(^[a-zA-Z0-9!_-]+(\.[a-zA-Z0-9]+)$)', inputted_data)
-        if line:
-            get_grid_for_file(line.group())
-        elif inputted_data.isdigit():
-            get_grid_for_console(inputted_data)
-        elif inputted_data == 'exit':
-            break
-        else:
-            raise Exception("Введенное значение не число и не имя файла в директории.")
+        try:
+            print("Введите имя файла с неразрешенным Шикаку или количество строк для решения из консоли.")
+            print("Для выхода из программы введите «exit»")
+            print()
+            inputted_data = input()
+            line = re.search(r'(^[a-zA-Z0-9!_-]+(\.[a-zA-Z0-9]+)$)', inputted_data)
+            if line:
+                get_grid_for_file(line.group())
+            elif inputted_data.isdigit():
+                get_grid_for_console(inputted_data)
+            elif inputted_data == 'exit':
+                break
+            else:
+                print("Введенное значение не число и не имя файла в директории.")
+
+        except Exception:
+            print("Введенное значение не число и не имя файла в директории.")
 
 
 class TestShikakuSolver(unittest.TestCase):
