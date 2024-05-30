@@ -11,43 +11,10 @@ class Solver:
         self.cols_count = len(matrix[0])
         self.points_on_grid = self.get_start_points()
         self.reserved_points = deepcopy(self.points_on_grid)
-        # self.answer_matrix = [['0' for j in range(len(matrix))] for i in range(len(matrix))]
         self.answer_matrix = deepcopy(self.matrix)
-        # self.fill_answer_matrix()
         self.counter_reserved_rect = 1
         self.determine_part_solve()
         self.list_of_solutions = list()
-
-    # def fill_answer_matrix(self):
-    #     for j in range(self.rows_count):
-    #         for i in range(self.cols_count):
-    #             if self.matrix[j][i] >= 0:
-    #                 self.answer_matrix[j][i] = 0
-
-    # cols_count = None
-    # rows_count = None
-
-    # def calculate_dimensions(self) -> (int, int):
-    #     #global cols_count, rows_count
-    #     cols_count= len(self.matrix[0])
-    #     rows_count = len(self.matrix)
-    #     return cols_count, rows_count
-
-    # def get_rect_various_all(self, x, y) -> set:
-    #     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
-    #     number = self.matrix[y][x]
-    #     rect_various = set()
-    #     for num in range(1, number + 1):
-    #         if number % num == 0:
-    #             height = num
-    #             width = number // num
-    #             # работало верно, надо было переставить размеры с квадратного на прямоугольники
-    #             for i in range(max(0, x - width + 1), min(x + 1, self.cols_count - width + 1)):
-    #                 for j in range(max(0, y - height + 1), min(y + 1, self.rows_count - height + 1)):
-    #                     # if is_bound(matrix, i, j, height, width):
-    #                     #     continue
-    #                     rect_various.add(Rect(i, j, height, width))
-    #     return rect_various
 
     def get_rect_various_bounds(self, point: Point) -> set:
         """Возвращает все возможные расположения прямоугольников для каждой ячейки"""
@@ -102,13 +69,10 @@ class Solver:
         if point in self.points_on_grid:
             self.points_on_grid.remove(point)
         all_reserved_point_in_rect = set()
-        wi = rect.X + rect.Width
-        hi = rect.Y + rect.Height
-        rectX = rect.X
-        rectY = rect.Y
-        flag = rect.X >= 0 or rect.Y >= 0 or rect.X + rect.Width <= self.cols_count or rect.Y + rect.Height <= self.rows_count
+        flag = (rect.X >= 0 or rect.Y >= 0
+                or rect.X + rect.Width <= self.cols_count or rect.Y + rect.Height <= self.rows_count)
         if flag:
-            for i in range(rect.X, rect.X + rect.Width):    # нужна ли проверка на границы?
+            for i in range(rect.X, rect.X + rect.Width):
                 for j in range(rect.Y, rect.Y + rect.Height):
                     #if not(self.is_bound(i, j, rect.Height, rect.Width)):
                     # if Point(i, j) not in self.reserved_points:
@@ -119,7 +83,7 @@ class Solver:
         self.reserved_points = self.reserved_points | all_reserved_point_in_rect
         self.counter_reserved_rect += 1
 
-        for conflict_point in self.dictionary_of_points.keys():          # Не должны ли мы ничего копировать?
+        for conflict_point in self.dictionary_of_points.keys():
             is_conflict = False
             for rect in self.dictionary_of_points[conflict_point]:
                 for reserved_point in all_reserved_point_in_rect:
@@ -132,11 +96,6 @@ class Solver:
 
         if point in self.dictionary_of_points:
             self.dictionary_of_points.pop(point)
-
-        # for key, val in self.dictionary_of_points.items():
-        #     print(f"Point ({key.X}, {key.Y}):")
-        #     for rectangle in val:
-        #         print(rectangle)
 
     def determine_part_solve(self):
         """Заполняет словарь точка-прямоугольник либо резервирует прямоугольники на поле"""
@@ -219,20 +178,18 @@ class Solver:
         else:
             return False
 
-
-        # for point in self.points_on_grid:
-        #     # global dictionary_of_points
-        #     self.dictionary_of_points[point] = None
-        #
-        # for key in self.dictionary_of_points:
-        #     self.dictionary_of_points[key] = self.get_rect_various_bounds(key)
-        #
-        # return self.dictionary_of_points
-
-        # print("Возможные прямоугольники у точки с учетом границ:")
-        # print(self.get_rect_various_bounds(6, 3))
-        # Вывод всех ректанглов для каждой точки в словаре
-        # for point, rectangles in self.dictionary_of_points.items():
-        #     print(f"Point ({point.X}, {point.Y}):")
-        #     for rectangle in rectangles:
-        #         print(rectangle)
+    # def get_rect_various_all(self, x, y) -> set:
+    #     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
+    #     number = self.matrix[y][x]
+    #     rect_various = set()
+    #     for num in range(1, number + 1):
+    #         if number % num == 0:
+    #             height = num
+    #             width = number // num
+    #             # работало верно, надо было переставить размеры с квадратного на прямоугольники
+    #             for i in range(max(0, x - width + 1), min(x + 1, self.cols_count - width + 1)):
+    #                 for j in range(max(0, y - height + 1), min(y + 1, self.rows_count - height + 1)):
+    #                     # if is_bound(matrix, i, j, height, width):
+    #                     #     continue
+    #                     rect_various.add(Rect(i, j, height, width))
+    #     return rect_various

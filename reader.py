@@ -43,18 +43,18 @@ class Shikaku_Reader:
             raise ValueError("Похоже, введен не выпуклый шестиугольник.")
 
         if num_rows % 2 == 0:
-            if len(matrix[(num_rows - 1) // 2]) != len(matrix[(num_rows - 1) // 2]) + 1:
+            if len(matrix[(num_rows - 1) // 2]) != len(matrix[(num_rows - 1) // 2 + 1]):
                 raise ValueError("Серединные строки шестиугольника с четным количеством строк должны быть одинаковой длины.")
         # print(matrix)
 
         if num_rows % 2 == 0:
-            for i in range(num_rows):
+            for i in range(num_rows // 2):
                 if len(matrix[(num_rows - 1) // 2 - i]) != len(matrix[(num_rows - 1) // 2 + 1 + i]):
                     raise ValueError(
                         "Симметричные строки должны быть одинаковой длины.")
 
         if num_rows % 2 != 0:
-            for i in range(1, num_rows):
+            for i in range(num_rows // 2 + 1):
                 if len(matrix[(num_rows - 1) // 2 - i]) != len(matrix[(num_rows - 1) // 2 + i]):
                     raise ValueError(
                         "Симметричные строки должны быть одинаковой длины.")
@@ -88,5 +88,3 @@ class Shikaku_Reader:
         except Exception as e:
             print("Не можем обработать ваш Шикаку, потому что:", e)
             return None
-
-

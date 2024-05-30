@@ -78,7 +78,7 @@ def handle_list_matrix(matrix_int):
             for row in table_rows:
                 writer.writerow([row])
 
-        # print(f"Таблица успешно записана в {file_path}")
+        print(f"Таблица успешно записана в {file_path}")
         print_solutions(result, rows_count, cols_count)
         return result
 
