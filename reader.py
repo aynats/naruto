@@ -1,4 +1,4 @@
-class shikaku_reader:
+class Shikaku_Reader:
     @staticmethod
     def get_grid(file_name):
         # список списков-строк
@@ -42,14 +42,20 @@ class shikaku_reader:
         if len(matrix[num_rows // 2]) != max_length:
             raise ValueError("Похоже, введен не выпуклый шестиугольник.")
 
-        if len(matrix[(num_rows - 1) % 2]) == 0:
+        if num_rows % 2 == 0:
             if len(matrix[(num_rows - 1) // 2]) != len(matrix[(num_rows - 1) // 2]) + 1:
                 raise ValueError("Серединные строки шестиугольника с четным количеством строк должны быть одинаковой длины.")
         # print(matrix)
 
-        if len(matrix[(num_rows - 1 ) % 2]) == 0:
+        if num_rows % 2 == 0:
             for i in range(num_rows):
-                if len(matrix[(num_rows - 1) // 2]) - i != len(matrix[(num_rows - 1) // 2]) + 1 + i:
+                if len(matrix[(num_rows - 1) // 2 - i]) != len(matrix[(num_rows - 1) // 2 + 1 + i]):
+                    raise ValueError(
+                        "Симметричные строки должны быть одинаковой длины.")
+
+        if num_rows % 2 != 0:
+            for i in range(1, num_rows):
+                if len(matrix[(num_rows - 1) // 2 - i]) != len(matrix[(num_rows - 1) // 2 + i]):
                     raise ValueError(
                         "Симметричные строки должны быть одинаковой длины.")
 

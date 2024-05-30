@@ -1,6 +1,6 @@
 from copy import deepcopy
-from pppoint import Point
-from rrrrectangle import Rect
+from Point_class import Point
+from Rectangle_class import Rect
 
 
 class Solver:

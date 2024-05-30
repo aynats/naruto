@@ -1,4 +1,4 @@
-from pppoint import Point
+from Point_class import Point
 
 
 points_on_grid = set()

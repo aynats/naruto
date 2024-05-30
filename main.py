@@ -1,11 +1,9 @@
 import sys
-
 from solver import Solver as s
-from reader import shikaku_reader as r
-from pppoint import Point
-from rrrrectangle import Rect
+from reader import Shikaku_Reader as r
 import re
 import csv
+import unittest
 
 
 def find_second_order_lists(nested_list):
@@ -16,8 +14,8 @@ def find_second_order_lists(nested_list):
         """Вкладывает в главный список таблиц одну уникальную таблицу"""
         for item in sl:
             solution = []
-            if isinstance(item, list):      # Если элемент является списком
-                if all(isinstance(i, list) for i in item):      # Проверяем, что все элементы внутри - списки
+            if isinstance(item, list):  # Если элемент является списком
+                if all(isinstance(i, list) for i in item):  # Проверяем, что все элементы внутри - списки
                     for row in range(len(item)):
                         # Проверяем, что все элементы внутри списка - либо цифры (-1), либо строки
                         if all(isinstance(i, int) or isinstance(i, str) for i in item[row]):
@@ -43,6 +41,7 @@ def discard_zero_solutions(unique_solutions):
                     right_unique_solutions.remove(sub_list)
                     break
     return right_unique_solutions
+
 
 def handle_list_matrix(matrix_int):
     rows_count = len(matrix_int)
@@ -79,48 +78,124 @@ def handle_list_matrix(matrix_int):
             for row in table_rows:
                 writer.writerow([row])
 
-        print(f"Таблица успешно записана в {file_path}")
+        # print(f"Таблица успешно записана в {file_path}")
+        print_solutions(result, rows_count, cols_count)
+        return result
 
-        for l in range(len(result)):
-            for i in range(rows_count):
-                for j in range(cols_count):
-                    print(result[l][i][j], end='\t')
-                    pass
-                print()
+
+def print_solutions(result, rows_count, cols_count):
+    for l in range(len(result)):
+        for i in range(rows_count):
+            for j in range(cols_count):
+                print(result[l][i][j], end='\t')
+                pass
             print()
-    print()
+        print()
+
+
+def get_grid_for_file(inputted_data):
+    try:
+        matrix_int = r.get_grid(inputted_data)
+        return handle_list_matrix(matrix_int)
+    except Exception:
+        print("Ошибка - неверный формат файла")
+
+
+def get_grid_for_console(inputted_data):
+    try:
+        matrix_int = r.read_matrix_from_console(inputted_data)
+        handle_list_matrix(matrix_int)
+    except ValueError as a:
+        print('Ошибка: ', a)
+
 
 if __name__ == "__main__":
     while True:
         print("Введите имя файла с неразрешенным Шикаку или количество строк для решения из консоли.")
         inputted_data = input()
-        line = re.search(r'^[a-zA-Z0-9!_-]+(\.[a-zA-Z0-9]+)$', inputted_data)
+        line = re.search(r'(^[a-zA-Z0-9!_-]+(\.[a-zA-Z0-9]+)$)', inputted_data)
         if line:
-            try:
-               matrix_int = r.get_grid(inputted_data)
-               handle_list_matrix(matrix_int)
-            except Exception as a:
-                print("Ошибка - неверный формат файла")
+            get_grid_for_file(line.group())
         else:
-            try:
-                matrix_int = r.read_matrix_from_console(inputted_data)
-                handle_list_matrix(matrix_int)
-            except Exception as a:
-                print("Ошибка - неверный формат файла")
+            get_grid_for_console(inputted_data)
 
 
+class TestShikakuSolver(unittest.TestCase):
+    def test_txt_average_chart_3x3(self):
+        result = get_grid_for_file("test18.txt")
+        self.assertEqual([[[-1, 'b', -1], ['a', 'b', 'c'], [-1, 'b', -1]]], result)
 
+    def test_txt_average_chart_4x4(self):
+        result = get_grid_for_file("test2.txt")
+        self.assertEqual([[[-1, 'c', 'c', -1], ['a', 'a', 'a', 'a'], [-1, 'b', 'b', -1]]], result)
 
+    def test_txt_average_chart_5x5(self):
+        result = get_grid_for_file("test3.txt")
+        self.assertEqual([[[-1, 'f', 'f', 'f', -1], ['a', 'a', 'a', 'a', 'a'], ['g', 'g', 'd', 'd', 'd'],
+                           ['c', 'c', 'c', 'c', 'e'], [-1, 'b', 'b', 'b', -1]]], result)
 
+        result = get_grid_for_file("test4.txt")
+        self.assertEqual([[[-1, 'b', 'd', 'c', -1], ['e', 'b', 'd', 'c', 'g'], ['e', 'f', 'd', 'c', 'g'],
+                           ['e', 'f', 'd', 'c', 'a'], [-1, 'f', 'd', 'c', -1]]], result)
+
+        result = get_grid_for_file("test5.txt")
+        self.assertEqual([[[-1, 'a', 'a', 'a', -1], ['e', 'e', 'f', 'b', 'b'], ['e', 'e', 'f', 'b', 'b'],
+                           ['e', 'e', 'd', 'd', 'd'], [-1, 'c', 'c', 'c', -1]]], result)
+
+        result = get_grid_for_file("test8.txt")
+        self.assertEqual([[[-1, 'a', 'a', 'a', -1], ['e', 'a', 'a', 'a', 'b'], ['e', 'a', 'a', 'a', 'b'],
+                           ['d', 'd', 'd', 'd', 'b'], [-1, 'c', 'c', 'c', -1]]], result)
+
+    def test_txt_average_chart_8x8(self):
+        result = get_grid_for_file("test1.txt")
+        self.assertEqual([[[-1, -1, 'a', 'a', 'a', 'a', -1, -1], [-1, 'c', 'c', 'c', 'c', 'c', 'c', -1],
+                           ['b', 'b', 'b', 'b', 'e', 'e', 'e', 'e'], ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd'],
+                           [-1, 'f', 'f', 'f', 'f', 'f', 'f', -1], [-1, -1, 'g', 'g', 'g', 'g', -1, -1]]], result)
+
+        result = get_grid_for_file("test6.txt")
+        self.assertEqual([[[-1, -1, -1, 'f', 'b', -1, -1, -1], [-1, -1, 'g', 'f', 'b', 'e', -1, -1],
+                           [-1, 'a', 'g', 'n', 'n', 'n', 'n', -1],
+                           ['h', 'h', 'g', 'k', 'k', 'l', 'l', 'l'], ['h', 'h', 'g', 'k', 'k', 'd', 'j', 'j'],
+                           [-1, 'c', 'g', 'k', 'k', 'o', 'o', -1], [-1, -1, 'g', 'm', 'm', 'm', -1, -1],
+                           [-1, -1, -1, 'i', 'i', -1, -1, -1]]], result)
+
+    def test_txt_for_rectangle(self):
+        result = get_grid_for_file("test19.txt")
+        self.assertEqual([[['e', 'e', 'f', 'c', 'c', 'a'], ['e', 'e', 'f', 'c', 'c', 'a'],
+                           ['b', 'b', 'b', 'c', 'c', 'a'], ['b', 'b', 'b', 'c', 'c', 'a'],
+                           ['b', 'b', 'b', 'c', 'c', 'a'], ['d', 'd', 'd', 'd', 'd', 'a']]], result)
+
+    # def test_txt_wrong_cells(self):
+    #     result = get_grid_for_file("test10.txt")
+    #     self.assertEqual(sys.exit(), result)
+
+    # def test_txt_wrong_format(self):
+    #     result = get_grid_for_file("test_text.txt")
+    #     self.assertEqual(sys.exit(), result)
+    def test_txt_for_5x3_3x5(self):
+        result = get_grid_for_file("test16.txt")
+        self.assertEqual([[[-1, 'a', -1], [-1, 'a', -1], ['b', 'b', 'b'], [-1, 'c', -1], [-1, 'c', -1]]], result)
+        result = get_grid_for_file("test17.txt")
+        self.assertEqual([[[-1, -1, 'c', -1, -1], ['a', 'a', 'c', 'b', 'b'], [-1, -1, 'c', -1, -1]]], result)
+
+    def test_txt_multiple_solutions(self):
+        result = get_grid_for_file("test14.txt")
+        self.assertEqual([[['a', 'b'], ['a', 'b']], [['b', 'b'], ['a', 'a']]], result)
+        result = get_grid_for_file("test15.txt")
+        self.assertEqual([[[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
+                           ['e', 'b', 'h', 'h', 'h', 'c', 'a'], [-1, 'b', 'i', 'i', 'i', 'c', -1],
+                           [-1, -1, 'f', 'f', 'f', -1, -1]],
+                          [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'h', 'g', 'i', 'c', -1],
+                           ['e', 'b', 'h', 'g', 'i', 'c', 'a'], [-1, 'b', 'h', 'g', 'i', 'c', -1],
+                           [-1, -1, 'f', 'f', 'f', -1, -1]],
+                          [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
+                           ['e', 'b', 'i', 'f', 'h', 'c', 'a'], [-1, 'b', 'i', 'f', 'h', 'c', -1],
+                           [-1, -1, 'i', 'f', 'h', -1, -1]]], result)
 
 
     # Проверка с консоли
     # matrix = r.read_matrix_from_console()
     # print(matrix)
-
-
-
-
 
     # # Проверка метода reserve_rectangle
     # print()

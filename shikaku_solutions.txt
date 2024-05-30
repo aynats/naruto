@@ -1,0 +1,21 @@
+-1	-1	d	d	d	-1	-1
+-1	b	g	g	g	c	-1
+e	b	h	h	h	c	a
+-1	b	i	i	i	c	-1
+-1	-1	f	f	f	-1	-1
+ 
+ 
+-1	-1	d	d	d	-1	-1
+-1	b	h	g	i	c	-1
+e	b	h	g	i	c	a
+-1	b	h	g	i	c	-1
+-1	-1	f	f	f	-1	-1
+ 
+ 
+-1	-1	d	d	d	-1	-1
+-1	b	g	g	g	c	-1
+e	b	i	f	h	c	a
+-1	b	i	f	h	c	-1
+-1	-1	i	f	h	-1	-1
+ 
+ 
