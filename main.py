@@ -85,10 +85,10 @@ def handle_list_matrix(matrix_int):
 
 def print_solutions(result, rows_count, cols_count):
     """Печатает решение в консоль"""
-    for l in range(len(result)):
-        for i in range(rows_count):
-            for j in range(cols_count):
-                print(result[l][i][j], end='\t')
+    for chart in range(len(result)):
+        for row in range(rows_count):
+            for column in range(cols_count):
+                print(result[chart][row][column], end='\t')
                 pass
             print()
         print()
@@ -181,6 +181,7 @@ class TestShikakuSolver(unittest.TestCase):
     # def test_txt_wrong_format(self):
     #     result = get_grid_for_file("test_text.txt")
     #     self.assertEqual(sys.exit(), result)
+
     def test_txt_for_5x3_3x5(self):
         result = get_grid_for_file("test16.txt")
         self.assertEqual([[[-1, 'a', -1], [-1, 'a', -1], ['b', 'b', 'b'], [-1, 'c', -1], [-1, 'c', -1]]], result)
