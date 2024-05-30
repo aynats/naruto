@@ -51,14 +51,14 @@ def handle_list_matrix(matrix_int):
 
     solutions = solver.main_solve()
     if isinstance(solutions, bool) and not solutions:
-        print("There is no solutions for Shikaku task")
-        sys.exit()
+        print("Для такого Шикаку нет решения")
+        # sys.exit()
     else:
         unique_solutions = find_second_order_lists(solutions.copy())
         result = discard_zero_solutions(unique_solutions)
         if len(result) == 0:
-            print("There is no solutions for Shikaku")
-            sys.exit()
+            print("Для такого Шикаку нет решения")
+            # sys.exit()
         # print(result)
         table_rows = []
         for table in result:
