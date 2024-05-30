@@ -24,7 +24,6 @@ class Solver:
             if number % num == 0:
                 height = num
                 width = number // num
-                # работало верно, надо было переставить размеры с квадратного на прямоугольники
                 for i in range(max(0, point.X - width + 1), min(point.X + 1, self.cols_count - width + 1)):
                     for j in range(max(0, point.Y - height + 1), min(point.Y + 1, self.rows_count - height + 1)):
                         bounds = self.is_bound(i, j, height, width)

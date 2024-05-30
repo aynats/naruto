@@ -1,4 +1,3 @@
-import sys
 from solver import Solver as s
 from reader import Shikaku_Reader as r
 import re
@@ -44,6 +43,7 @@ def discard_zero_solutions(unique_solutions):
 
 
 def handle_list_matrix(matrix_int):
+    """Вычисляет и выводит решение в файл и в консоль"""
     rows_count = len(matrix_int)
     cols_count = len(matrix_int[0])
     # print(matrix_int)
@@ -84,6 +84,7 @@ def handle_list_matrix(matrix_int):
 
 
 def print_solutions(result, rows_count, cols_count):
+    """Печатает решение в консоль"""
     for l in range(len(result)):
         for i in range(rows_count):
             for j in range(cols_count):
@@ -94,6 +95,7 @@ def print_solutions(result, rows_count, cols_count):
 
 
 def get_grid_for_file(inputted_data):
+    """Пытается вычислить решение при условии, когда введено имя файла"""
     try:
         matrix_int = r.get_grid(inputted_data)
         return handle_list_matrix(matrix_int)
@@ -102,6 +104,7 @@ def get_grid_for_file(inputted_data):
 
 
 def get_grid_for_console(inputted_data):
+    """Пытается вычислить решение при условии, когда ввод производится через консоль"""
     try:
         matrix_int = r.read_matrix_from_console(inputted_data)
         handle_list_matrix(matrix_int)
@@ -124,6 +127,7 @@ if __name__ == "__main__":
             break
         else:
             raise Exception("Введенное значение не число и не имя файла в директории.")
+
 
 class TestShikakuSolver(unittest.TestCase):
     def test_txt_average_chart_3x3(self):
@@ -196,7 +200,6 @@ class TestShikakuSolver(unittest.TestCase):
                           [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
                            ['e', 'b', 'i', 'f', 'h', 'c', 'a'], [-1, 'b', 'i', 'f', 'h', 'c', -1],
                            [-1, -1, 'i', 'f', 'h', -1, -1]]], result)
-
 
     # Проверка с консоли
     # matrix = r.read_matrix_from_console()
