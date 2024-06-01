@@ -1,7 +1,8 @@
-from solver import Solver as s
-from reader import Shikaku_Reader as r
-import re
+from class_solver import Solver as s
+from class_reader import Shikaku_Reader as r
 import csv
+import click
+import re
 
 
 def find_second_order_lists(nested_list):
@@ -88,9 +89,35 @@ def print_solutions(result, rows_count, cols_count):
         for row in range(rows_count):
             for column in range(cols_count):
                 print(result[chart][row][column], end='\t')
-                pass
             print()
         print()
+
+
+@click.command()
+@click.option('--path', '-p', type=str, default=None, help='Решает головоломку Шикаку из .txt с введенным названием.')
+@click.option('--grid-input', '-i', type=str, default=None, help='Решает головоломку с указанным числом строк.')
+@click.option('--example', '-e', is_flag=True, help='Генерирует Шикаку с решением.')
+def main(path, example, grid_input):
+    if path:
+        try:
+            line = re.search(r'(^[a-zA-Z0-9!_-]+(\.txt)$)', path)
+            if line:
+                get_grid_for_file(line.group())
+            else:
+                print('Введите файл с расширением .txt для решения.')
+        except Exception as e:
+            print(f"Ошибка при чтении файла '{path}': {e}.")
+    elif grid_input:
+        try:
+            grid_rows_count = int(grid_input)  # Попытка преобразовать строку в целое число
+            if grid_rows_count > 0:  # Проверка, что число положительное
+                get_grid_for_console(grid_rows_count)
+            else:
+                print('Число строк должно быть положительным.')
+        except ValueError:
+            print('Введите число - количество строк в Шикаку.')
+    else:
+        print("Необходимо указать название файла, количество вводимых строк или флаг --example.")
 
 
 def get_grid_for_file(inputted_data):
@@ -98,8 +125,8 @@ def get_grid_for_file(inputted_data):
     try:
         matrix_int = r.get_grid(inputted_data)
         return handle_list_matrix(matrix_int)
-    except Exception:
-        print("Ошибка - неверный формат файла")
+    except Exception as e:
+        print(f"Ошибка при чтении файла {inputted_data}: {e}")
 
 
 def get_grid_for_console(inputted_data):
@@ -107,77 +134,9 @@ def get_grid_for_console(inputted_data):
     try:
         matrix_int = r.read_matrix_from_console(inputted_data)
         handle_list_matrix(matrix_int)
-    except ValueError as a:
-        print('Ошибка: ', a)
+    except Exception as a:
+        print('Ошибка ввода в консоль: ', a)
 
 
 if __name__ == "__main__":
-    while True:
-        try:
-            print("Введите имя файла с неразрешенным Шикаку или количество строк для решения из консоли.")
-            print("Для выхода из программы введите «exit»")
-            print()
-            inputted_data = input()
-            line = re.search(r'(^[a-zA-Z0-9!_-]+(\.[a-zA-Z0-9]+)$)', inputted_data)
-            if line:
-                get_grid_for_file(line.group())
-            elif inputted_data.isdigit():
-                get_grid_for_console(inputted_data)
-            elif inputted_data == 'exit':
-                break
-            else:
-                print("Введенное значение не число и не имя файла в директории.")
-
-        except Exception:
-            print("Введенное значение не число и не имя файла в директории.")
-
-
-# Проверка с консоли
-# matrix = r.read_matrix_from_console()
-# print(matrix)
-
-# # Проверка метода reserve_rectangle
-# print()
-# first_key = next(iter(solutions))
-#
-# # Теперь мы можем получить доступ к первому кортежу первого ключа
-# desired_tuple = list(solutions[first_key])[0]
-#
-# # print("reserve", desired_tuple)
-# print("reserve", solver.reserve_rectangle(desired_tuple, list(solutions.keys())[2]))
-
-# for key, val in dict.items():
-#     print(f"Point ({key.X}, {key.Y}):")
-#     for rectangle in val:
-#         print(rectangle)
-
-# points_on_grid = get_start_points(matrix_int)
-# for point in points_on_grid:
-#     #global dictionary_of_points
-#     dictionary_of_points[point] = None
-#
-# #for key in dictionary_of_points:
-#     #print("Все полученные точки поля: ", key)
-#
-# x, y = calculate_lenwidth(matrix_int)
-# #calculate_lenwidth(matrix_int)
-# print("Парсинг матрицы:", matrix_int)
-# print("Размеры матрицы:", x, "*", y)
-# print("Возможные прямоугольники у точки без учета границ:")
-# print(get_rect_various_all(matrix_int, 4,0))
-# print("Возможные прямоугольники у точки с учетом границ:")
-# print(get_rect_various_bounds(matrix_int, 4,0))
-#
-# # В словаре каждой точке сопоставили кортеж с прямоугольником
-# for key in dictionary_of_points:
-#     dictionary_of_points[key] = get_rect_various_bounds(matrix_int, key.X, key.Y)
-
-# Вывод всех ректанглов для каждой точки в словаре
-# for point, rectangles in dictionary_of_points.items():
-#     print(f"Point ({point.X}, {point.Y}):")
-#     for rectangle in rectangles:
-#         print(rectangle)
-
-# all_the_points_on_grid = get_start_points(matrix_int)
-# print("Список всех координат чисел на поле в хэше:", all_the_points_on_grid)
-# print("Есть ли границы в прямоугольниках:", is_bound(matrix_int, 4,2, 4, 1))
+    main()

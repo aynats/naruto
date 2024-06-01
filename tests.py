@@ -1,5 +1,5 @@
 import unittest
-import main
+import shikaku_main
 
 
 class TestShikakuSolver(unittest.TestCase):
