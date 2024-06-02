@@ -3,42 +3,49 @@ from class_reader import Shikaku_Reader as r
 import csv
 import click
 import re
+import generator as generator
 
 
 def find_second_order_lists(nested_list):
     """Возвращает список с неповторяющимися таблицами"""
-    second_order_lists = []  # Список для хранения всех найденных таблиц с уникальными решениями
 
-    def get_unique_solutions(sl):
-        """Вкладывает в главный список таблиц одну уникальную таблицу"""
-        for item in sl:
-            solution = []
-            if isinstance(item, list):  # Если элемент является списком
-                if all(isinstance(i, list) for i in item):  # Проверяем, что все элементы внутри - списки
-                    for row in range(len(item)):
-                        # Проверяем, что все элементы внутри списка - либо цифры (-1), либо строки
-                        if all(isinstance(i, int) or isinstance(i, str) for i in item[row]):
-                            solution.append(item[row])
-                            if row == len(item) - 1:
-                                if solution not in second_order_lists:
-                                    second_order_lists.append(solution.copy())
-                                solution.clear()
-                        else:
-                            get_unique_solutions(item)
+    def is_second_order_list(lst):
+        return all(isinstance(i, list) and all(isinstance(j, (int, str)) for j in i) for i in lst)
 
-    get_unique_solutions(nested_list)
+    second_order_lists = []
+    seen = set()  # Множество для отслеживания уникальных таблиц
+    stack = [nested_list]
+
+    while stack:
+        current = stack.pop()
+        if isinstance(current, list):
+            for item in current:
+                if isinstance(item, list):
+                    if is_second_order_list(item):
+                        item_tuple = tuple(
+                            tuple(row) for row in item)  # Преобразуем в кортежи для добавления в множество
+                        if item_tuple not in seen:
+                            seen.add(item_tuple)
+                            second_order_lists.append(item)
+                    stack.append(item)
+
     return second_order_lists
 
 
 def discard_zero_solutions(unique_solutions):
     """Отбрасывает все решения, в которых в строках встретились незаполненные прямоугольниками клетки, т.е. неверные"""
-    right_unique_solutions = unique_solutions.copy()
+    right_unique_solutions = unique_solutions.copy()  # Правильное создание копии списка
+
     for sub_list in unique_solutions:
+        found_zero = False  # Проверяем, был ли найден ноль в текущем списке
         for row in sub_list:
             for item in row:
                 if item == 0:
-                    right_unique_solutions.remove(sub_list)
-                    break
+                    found_zero = True  # Помечаем, что в списке найден ноль
+                    break  # Прерываем цикл, так как достаточно одного нуля для удаления списка
+        if found_zero:  # Если был найден ноль, удаляем этот список из копии
+            right_unique_solutions.remove(sub_list)
+
     return right_unique_solutions
 
 
@@ -77,8 +84,8 @@ def handle_list_matrix(matrix_int):
             # Записываем строки таблицы
             for row in table_rows:
                 writer.writerow([row])
+            print(f"Таблица успешно записана в {file_path}")
 
-        print(f"Таблица успешно записана в {file_path}")
         print_solutions(result, rows_count, cols_count)
         return result
 
@@ -95,9 +102,9 @@ def print_solutions(result, rows_count, cols_count):
 
 @click.command()
 @click.option('--path', '-p', type=str, default=None, help='Решает головоломку Шикаку из .txt с введенным названием.')
-@click.option('--grid-input', '-i', type=str, default=None, help='Решает головоломку с указанным числом строк.')
-@click.option('--example', '-e', is_flag=True, help='Генерирует Шикаку с решением.')
-def main(path, example, grid_input):
+@click.option('--console', '-c', type=str, default=None, help='Решает головоломку с указанным числом строк.')
+@click.option('--generate', '-g', is_flag=True, help='Генерирует Шикаку с решением.')
+def main(path, generate, console):
     if path:
         try:
             line = re.search(r'(^[a-zA-Z0-9!_-]+(\.txt)$)', path)
@@ -107,15 +114,17 @@ def main(path, example, grid_input):
                 print('Введите файл с расширением .txt для решения.')
         except Exception as e:
             print(f"Ошибка при чтении файла '{path}': {e}.")
-    elif grid_input:
+    elif console:
         try:
-            grid_rows_count = int(grid_input)  # Попытка преобразовать строку в целое число
+            grid_rows_count = int(console)  # Попытка преобразовать строку в целое число
             if grid_rows_count > 0:  # Проверка, что число положительное
                 get_grid_for_console(grid_rows_count)
             else:
                 print('Число строк должно быть положительным.')
         except ValueError:
             print('Введите число - количество строк в Шикаку.')
+    elif generate:
+        generator.main()
     else:
         print("Необходимо указать название файла, количество вводимых строк или флаг --example.")
 
