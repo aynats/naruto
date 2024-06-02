@@ -2,7 +2,6 @@ from class_point import Point
 
 
 class Rect:
-
     def __init__(self, x: int, y: int, height: int, width: int):
         self.X = x
         self.Y = y

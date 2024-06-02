@@ -1,5 +1,5 @@
 import unittest
-import shikaku_main
+import shikaku_main as main
 
 
 class TestShikakuSolver(unittest.TestCase):
@@ -63,14 +63,16 @@ class TestShikakuSolver(unittest.TestCase):
 
     def test_txt_multiple_solutions(self):
         result = main.get_grid_for_file("test14.txt")
-        self.assertEqual([[['a', 'b'], ['a', 'b']], [['b', 'b'], ['a', 'a']]], result)
+        self.assertEqual([ [['b', 'b'], ['a', 'a']], [['a', 'b'], ['a', 'b']]], result)
         result = main.get_grid_for_file("test15.txt")
-        self.assertEqual([[[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
-                           ['e', 'b', 'h', 'h', 'h', 'c', 'a'], [-1, 'b', 'i', 'i', 'i', 'c', -1],
-                           [-1, -1, 'f', 'f', 'f', -1, -1]],
-                          [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'h', 'g', 'i', 'c', -1],
-                           ['e', 'b', 'h', 'g', 'i', 'c', 'a'], [-1, 'b', 'h', 'g', 'i', 'c', -1],
-                           [-1, -1, 'f', 'f', 'f', -1, -1]],
-                          [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
-                           ['e', 'b', 'i', 'f', 'h', 'c', 'a'], [-1, 'b', 'i', 'f', 'h', 'c', -1],
-                           [-1, -1, 'i', 'f', 'h', -1, -1]]], result)
+        self.assertEqual([
+            [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
+             ['e', 'b', 'i', 'f', 'h', 'c', 'a'], [-1, 'b', 'i', 'f', 'h', 'c', -1],
+             [-1, -1, 'i', 'f', 'h', -1, -1]],
+            [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'h', 'g', 'i', 'c', -1],
+             ['e', 'b', 'h', 'g', 'i', 'c', 'a'], [-1, 'b', 'h', 'g', 'i', 'c', -1],
+             [-1, -1, 'f', 'f', 'f', -1, -1]],
+            [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
+             ['e', 'b', 'h', 'h', 'h', 'c', 'a'], [-1, 'b', 'i', 'i', 'i', 'c', -1],
+             [-1, -1, 'f', 'f', 'f', -1, -1]]
+        ], result)

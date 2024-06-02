@@ -1,0 +1,14 @@
+puzzle
+-1	1	4	-1
+2	1	0	2
+0	2	0	0
+-1	0	0	-1
+ 
+ 
+solutions
+-1	b	d	-1
+a	c	d	e
+a	f	d	e
+-1	f	d	-1
+ 
+ 

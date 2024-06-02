@@ -69,3 +69,43 @@
 # all_the_points_on_grid = get_start_points(matrix_int)
 # print("Список всех координат чисел на поле в хэше:", all_the_points_on_grid)
 # print("Есть ли границы в прямоугольниках:", is_bound(matrix_int, 4,2, 4, 1))
+
+
+#Solver in main_solve:
+
+# def main_solve(self):
+#     """Основная функция, вызывающая все остальные"""
+#     if len(self.points_on_grid) == 0:
+#         if self.answer_matrix not in self.list_of_solutions:
+#             self.list_of_solutions.append(deepcopy(self.answer_matrix))
+#         return self.list_of_solutions
+#
+#     if self.is_solution_impossible():
+#         return []
+#
+#     unresolved_point = list(self.points_on_grid)[0]
+#     for poss_rect in self.dictionary_of_points[unresolved_point]:
+#         solver_copy = deepcopy(self)
+#         ans = solver_copy.get_solve_with_reserved_rect(poss_rect, unresolved_point)
+#         if ans:
+#             for sol in ans:
+#                 if sol not in self.list_of_solutions:
+#                     self.list_of_solutions.extend(ans)
+#
+#     return self.list_of_solutions
+
+# def get_rect_various_all(self, x, y) -> set:
+#     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
+#     number = self.matrix[y][x]
+#     rect_various = set()
+#     for num in range(1, number + 1):
+#         if number % num == 0:
+#             height = num
+#             width = number // num
+#             # работало верно, надо было переставить размеры с квадратного на прямоугольники
+#             for i in range(max(0, x - width + 1), min(x + 1, self.cols_count - width + 1)):
+#                 for j in range(max(0, y - height + 1), min(y + 1, self.rows_count - height + 1)):
+#                     # if is_bound(matrix, i, j, height, width):
+#                     #     continue
+#                     rect_various.add(Rect(i, j, height, width))
+#     return rect_various

@@ -128,22 +128,18 @@ class Solver:
         return self.main_solve()
 
     def get_all_solves(self):
-        answers = []
         if len(self.points_on_grid) == 0:
-            answers.append(self.answer_matrix)
+            return [deepcopy(self.answer_matrix)]
 
         if self.is_solution_impossible():
-            return False
+            return []
 
-        if len(self.points_on_grid) != 0:
-            unresolved_point = list(self.points_on_grid)[0]
-            for poss_rect in self.dictionary_of_points[unresolved_point]:
-                solver_copy = deepcopy(self)
-                #solver_copy.reserve_rect(poss_rect, unresolved_point)
-                #solver_copy.determine_part_solve()
-                ans = solver_copy.get_all_solves_with_reserved_rect(poss_rect, unresolved_point)
-                if ans:
-                    answers.extend(ans)
+        answers = []
+        unresolved_point = list(self.points_on_grid)[0]
+        for poss_rect in self.dictionary_of_points[unresolved_point]:
+            solver_copy = deepcopy(self)
+            ans = solver_copy.get_all_solves_with_reserved_rect(poss_rect, unresolved_point)
+            answers.extend(ans)
 
         return answers
 
@@ -176,19 +172,3 @@ class Solver:
             return self.list_of_solutions
         else:
             return False
-
-    # def get_rect_various_all(self, x, y) -> set:
-    #     """Возвращает множество допустимых вариантов прямоугольников для данной ячейки"""
-    #     number = self.matrix[y][x]
-    #     rect_various = set()
-    #     for num in range(1, number + 1):
-    #         if number % num == 0:
-    #             height = num
-    #             width = number // num
-    #             # работало верно, надо было переставить размеры с квадратного на прямоугольники
-    #             for i in range(max(0, x - width + 1), min(x + 1, self.cols_count - width + 1)):
-    #                 for j in range(max(0, y - height + 1), min(y + 1, self.rows_count - height + 1)):
-    #                     # if is_bound(matrix, i, j, height, width):
-    #                     #     continue
-    #                     rect_various.add(Rect(i, j, height, width))
-    #     return rect_various
