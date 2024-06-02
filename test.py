@@ -47,14 +47,6 @@ class TestShikakuSolver(unittest.TestCase):
                            ['b', 'b', 'b', 'c', 'c', 'a'], ['b', 'b', 'b', 'c', 'c', 'a'],
                            ['b', 'b', 'b', 'c', 'c', 'a'], ['d', 'd', 'd', 'd', 'd', 'a']]], result)
 
-    # def test_txt_wrong_cells(self):
-    #     result = get_grid_for_file("test10.txt")
-    #     self.assertEqual(sys.exit(), result)
-
-    # def test_txt_wrong_format(self):
-    #     result = get_grid_for_file("test_text.txt")
-    #     self.assertEqual(sys.exit(), result)
-
     def test_txt_for_5x3_3x5(self):
         result = main.get_grid_for_file("test16.txt")
         self.assertEqual([[[-1, 'a', -1], [-1, 'a', -1], ['b', 'b', 'b'], [-1, 'c', -1], [-1, 'c', -1]]], result)
@@ -63,7 +55,7 @@ class TestShikakuSolver(unittest.TestCase):
 
     def test_txt_multiple_solutions(self):
         result = main.get_grid_for_file("test14.txt")
-        self.assertEqual([ [['b', 'b'], ['a', 'a']], [['a', 'b'], ['a', 'b']]], result)
+        self.assertEqual([[['b', 'b'], ['a', 'a']], [['a', 'b'], ['a', 'b']]], result)
         result = main.get_grid_for_file("test15.txt")
         self.assertEqual([
             [[-1, -1, 'd', 'd', 'd', -1, -1], [-1, 'b', 'g', 'g', 'g', 'c', -1],
@@ -76,3 +68,43 @@ class TestShikakuSolver(unittest.TestCase):
              ['e', 'b', 'h', 'h', 'h', 'c', 'a'], [-1, 'b', 'i', 'i', 'i', 'c', -1],
              [-1, -1, 'f', 'f', 'f', -1, -1]]
         ], result)
+
+    def test_txt_narrow_hexagon(self):
+        result = main.get_grid_for_file("test7.txt")
+        self.assertEqual([[[-1, -1, -1, 'd', 'd', -1, -1, -1], ['a', 'a', 'a', 'c', 'c', 'b', 'b', 'b'], [-1, -1, -1, 'c', 'c', -1, -1, -1]]], result)
+        result = main.get_grid_for_file("test9.txt")
+        self.assertEqual([[[-1, -1, -1, -1, 'f', 'f', -1, -1, -1, -1],
+                           ['b', 'd', 'd', 'd', 'f', 'f', 'e', 'e', 'e', 'h'],
+                           ['b', 'a', 'a', 'a', 'a', 'a', 'a', 'g', 'g', 'h'],
+                           [-1, -1, -1, -1, 'c', 'c', -1, -1, -1, -1]]], result)
+
+    def test_txt_wrong_cells(self):
+        result = main.get_grid_for_file("test10.txt")
+        self.assertEqual(None, result)
+        result = main.get_grid_for_file("test12.txt")
+        self.assertEqual([], result)
+
+    def test_txt_wrong_format(self):
+        result = main.get_grid_for_file("test_text.txt")
+        self.assertEqual(None, result)
+
+    def test_txt_big_grid(self):
+        result = main.get_grid_for_file("test11.txt")
+        self.assertEqual([[[-1, -1, -1, -1, -1, 'i', -1, -1, -1, -1, -1],
+                           [-1, -1, -1, 'd', 'd', 'i', 'n', 'n', -1, -1, -1],
+                           [-1, 'c', 'c', 'c', 'c', 'i', 'n', 'n', 'k', 'k', -1],
+                           ['f', 'e', 'e', 'e', 'e', 'b', 'n', 'n', 'k', 'k', 'h'],
+                           ['f', 'e', 'e', 'e', 'e', 'l', 'l', 'l', 'l', 'j', 'h'],
+                           [-1, 'e', 'e', 'e', 'e', 'l', 'l', 'l', 'l', 'j', -1],
+                           [-1, -1, -1, 'g', 'g', 'm', 'm', 'm', -1, -1, -1],
+                           [-1, -1, -1, -1, -1, 'a', -1, -1, -1, -1, -1]]], result)
+
+        result = main.get_grid_for_file("test13.txt")
+        self.assertEqual([[[-1, -1, -1, 'h', 'h', 'h', 'a', -1, -1, -1],
+                           [-1, -1, 'c', 'h', 'h', 'h', 'a', 'b', -1, -1],
+                           [-1, 'k', 'k', 'k', 'f', 'f', 'a', 'b', 'g', -1],
+                           ['m', 'm', 'm', 'm', 'f', 'f', 'a', 'b', 'e', 'e'],
+                           [-1, 'i', 'i', 'i', 'f', 'f', 'a', 'd', 'd', -1],
+                           [-1, -1, 'j', 'j', 'f', 'f', 'n', 'n', -1, -1],
+                           [-1, -1, -1, 'l', 'l', 'l', 'l', -1, -1, -1]]], result)
+
